@@ -1,72 +1,55 @@
-#include <iostream>
-#include <stdio.h>
-#include <math.h>
-using namespace std;
-void solve(int);
-void printsolution();
-bool check(int,int);
-
-
-
-/* Using j for row index
-         i for column index
-    The idea is to place queens one-by-one in different column, start at column 1 aka
-    the leftmost one. When we place a piece in a column, we check if there is 
-    no already placed queen. In the current column, we find a row for which there is no clash,
-    mark it( both of column and row). If we cant find any row, we backtrack and return false.
-    Basically, we need to ensure 4 things:
-    1. there is no two queens share a column.
-    2. there is no two queens share a row.
-    3. there is no two queens share a top-right to left-bottom and top-left to bottom-right diagonal
-*/
-
-int pos[50], n;
-int main()
+//K185480106048 - Vu Thai Son
+//solve the problem for n = 8 (chessboard's size 8x8)
+var pos=[], save=[];
+var n = 8;
+var count  = 0;
+function __init__()
 {
-    cout<<"please enter the size of board: ";
-    cin>>n;
-    if (n==2 || n==3)
-    {
-        cout<<"can't place any queens!!!";
-        return 0;
-    }
-    solve(0);
-    return 0;
+    var i;
+    for (i = 1; i<= 50; i++)
+        save[i] = 0;
 }
-
-void solve(int col)
+function solve(col) //solve the problem
 {       
-    int j;
-    for(j = 0; j<n; j++)
-        { 
-        if(check(col,j) == true)
-            {
-            pos[col] = j;
-            if(col == n)
-                printsolution();
-            solve(col + 1);               
+    var j;
+    if(col > n)
+        printsolution();
+    else
+        for(j = 1; j<=n; j++) // check n rows
+            if(save[j] == 0)
+            { 
+                if(check(col,j) == true)
+                {
+                    pos[col] = j; //save the satisfying pos
+                    save[j] = 1; // mark this pos used
+                
+                    solve(col + 1); //recursion
+                    
+                    save[j] = 0; //backtracking
+                    
+                }
             }
-        }
 }  
-
-void printsolution() 
+function printsolution() 
 { 
-    int i;
-    for (i = 0; i < n; i++) 
-        cout<<pos[i]<<" ";
-    cout<<"\n";
+    var s="case " + (++count) + ": ";
+      for (var i = 1; i <= 8; i++)          
+         s+= pos[i] + " ";               
+      console.log(s);
 } 
-
-bool check(int x,int y)
+function check(x,y)
 // create a bool function checking the position of queen
 {
-    for(int i = 0; i<x; i++)
+    for(var i = 1; i<x; i++)
     {
-    if (pos[x] == y)
-        return false;
-    if (abs(i-x) == abs(pos[x]-y))
+    if (pos[i] == y)
+        return false; // aint share same row
+    if (Math.abs(i-x) == Math.abs(pos[i]-y)) //aint share same diagonal
         return false;
     }
     return true;        
 }   
-
+__init__();
+console.log("From left to right, Queens will be put in rows below: ")
+solve(1);
+console.log("that's all the answers")
