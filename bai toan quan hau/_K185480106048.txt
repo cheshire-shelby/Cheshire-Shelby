@@ -1,0 +1,56 @@
+//K185480106048 - Vu Thai Son
+//solve the problem for n = 8 (chessboard's size 8x8)
+var pos=[], save=[];
+var n = 8;
+var count  = 0;
+function __init__()
+{
+    var i;
+    for (i = 1; i<= 50; i++)
+        save[i] = 0;
+}
+function solve(col) //solve the problem
+{       
+    var j;
+    if(col > n)
+        printsolution();
+    else
+        for(j = 1; j<=n; j++) // check n rows
+            if(save[j] == 0)
+            { 
+                if(check(col,j) == true)
+                {
+                    pos[col] = j; //save the satisfying pos
+                    save[j] = 1; // mark this pos used
+                
+                    solve(col + 1); //recursion
+                    
+                    save[j] = 0; //backtracking
+                    
+                }
+            }
+}  
+function printsolution() 
+{ 
+    var s="case " + (++count) + ": ";
+      for (var i = 1; i <= 8; i++)          
+         s+= pos[i] + " ";               
+      console.log(s);
+} 
+function check(x,y)
+// create a bool function checking the position of queen
+{
+    for(var i = 1; i<x; i++)
+    {
+    if (pos[i] == y)
+        return false; // aint share same row
+    if (Math.abs(i-x) == Math.abs(pos[i]-y)) //aint share same diagonal
+        return false;
+    }
+    return true;        
+}   
+__init__();
+console.log("From left to right, Queens will be put in rows below: ")
+solve(1);
+console.log("that's all the answers")
+
