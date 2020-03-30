@@ -1,0 +1,78 @@
+<html>
+<head>
+  <title>the N Queens problem</title>
+</head>
+<body>
+ 
+Please enter the size of board: <input id="size"> 
+<button onclick ="go()">Let's Go !!!</button>
+
+<hr>
+<div id="result"></div>
+ 
+<script>
+var pos =[],save=[];
+var count  = 0;
+var n;
+function __init__()
+{
+    var i;
+    for (i = 1; i<= 50; i++)
+        save[i] = 0;
+}
+
+function solve(col) //solve the problem
+{       
+    var j;
+    if(col > n)
+        printsolution();
+    else
+        for(j = 1; j<=n; j++) // check n rows
+            if(save[j] == 0)
+            { 
+                if(check(col,j) == true)
+                {
+                    pos[col] = j; //save the satisfying pos
+                    save[j] = 1; // mark this pos used
+                
+                    solve(col + 1); //recursion
+                    
+                    save[j] = 0; //backtracking
+                    
+                }
+            }
+}  
+
+function printsolution() 
+{ 
+    var s="case " + (++count) + ": ";
+      for (var i = 1; i <= n; i++)          
+         s+= pos[i] + " ";               
+         document.getElementById('result').innerHTML+=s+"<br>";
+}  
+
+function check(x,y)
+// create a bool function checking the position of queen
+{
+    for(var i = 1; i<x; i++)
+    {
+    if (pos[i] == y)
+        return false; // aint share same row
+    if (Math.abs(i-x) == Math.abs(pos[i]-y)) //aint share same diagonal
+        return false;
+    }
+    return true;        
+}   
+
+function go()
+{
+    __init__();
+    n = document.getElementById('size').value;
+    document.getElementById('result').innerHTML="Please input size lower than 50 and different 2 or 3 <br>From left to right, Queens will be put in rows below: <br>";
+    solve(1);
+}
+
+</script>
+ 
+</body>
+</html>
